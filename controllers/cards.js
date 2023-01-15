@@ -4,7 +4,9 @@ const { NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE } = require('../utils/erro
 
 const getCards = async (req, res, next) => {
   try {
-    const cards = await Card.find({});
+    const cards = await Card.find({})
+      .populate('owner likes');
+
     res.send(cards);
   } catch (error) {
     next(error);
