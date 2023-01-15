@@ -21,11 +21,15 @@ const createCard = async (req, res, next) => {
   }
 };
 
-const deleteCard = async (req, res) => {
-  const card = await Card.findByIdAndRemove(req.params.cardId);
-  if (card === null) {
-    res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
-  } else res.send(card);
+const deleteCard = async (req, res, next) => {
+  try {
+    const card = await Card.findByIdAndRemove(req.params.cardId);
+    if (card === null) {
+      res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
+    } else res.send(card);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const likeCard = async (req, res, next) => {
@@ -33,7 +37,10 @@ const likeCard = async (req, res, next) => {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
       { $addToSet: { likes: req.user._id } },
-      { new: true },
+      {
+        new: true,
+        runValidators: true,
+      },
     );
     if (card === null) {
       res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
@@ -48,7 +55,10 @@ const dislikeCard = async (req, res, next) => {
     const card = await Card.findByIdAndUpdate(
       req.params.cardId,
       { $pull: { likes: req.user._id } },
-      { new: true },
+      {
+        new: true,
+        runValidators: true,
+      },
     );
     if (card === null) {
       res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
