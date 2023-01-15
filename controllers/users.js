@@ -55,7 +55,7 @@ const patchUserInfo = async (req, res, next) => {
 const patchUserAvatar = async (req, res, next) => {
   const { avatar } = req.body;
   try {
-    const user = User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
       req.user._id,
       { avatar },
       {
@@ -65,7 +65,7 @@ const patchUserAvatar = async (req, res, next) => {
     );
     if (user === null) {
       res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_USER_MESSAGE });
-    }
+    } else res.send(user);
   } catch (error) {
     next(error);
   }
