@@ -25,8 +25,7 @@ const deleteCard = async (req, res) => {
   const card = await Card.findByIdAndRemove(req.params.cardId);
   if (card === null) {
     res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
-  }
-  res.send(card);
+  } else res.send(card);
 };
 
 const likeCard = async (req, res, next) => {
@@ -38,8 +37,7 @@ const likeCard = async (req, res, next) => {
     );
     if (card === null) {
       res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
-    }
-    res.send(card);
+    } else res.send(card);
   } catch (error) {
     next(error);
   }
@@ -54,8 +52,7 @@ const dislikeCard = async (req, res, next) => {
     );
     if (card === null) {
       res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
-    }
-    res.send(card);
+    } else res.send(card);
   } catch (error) {
     next(error);
   }

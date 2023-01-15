@@ -16,8 +16,7 @@ const getUserById = async (req, res, next) => {
     const user = await User.findById(req.params.userId);
     if (user === null) {
       res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_USER_MESSAGE });
-    }
-    res.send({ data: user });
+    } else res.send({ data: user });
   } catch (error) {
     next(error);
   }
@@ -47,7 +46,7 @@ const patchUserInfo = async (req, res, next) => {
     );
     if (user === null) {
       res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_USER_MESSAGE });
-    }
+    } else res.send(user);
   } catch (error) {
     next(error);
   }
