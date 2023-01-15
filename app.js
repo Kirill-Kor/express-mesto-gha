@@ -6,6 +6,7 @@ const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const ValidationErrorHandler = require('./errors/ValidationError');
 const DefaultErrorHandler = require('./errors/DefaultError');
+const IncorrectIdSearch = require('./errors/CastError');
 
 const { PORT = 3000 } = process.env;
 
@@ -28,7 +29,12 @@ app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 
 app.use(ValidationErrorHandler);
+app.use(IncorrectIdSearch);
 app.use(DefaultErrorHandler);
+
+app.use('*', (req, res) => {
+  res.status(404).send({ message: 'Страница с таким адресом не существует' });
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

@@ -3,6 +3,7 @@ const DEFAULT_ERROR_MESSAGE = 'Ошибка';
 
 const INCORRECT_DATA_ERROR_CODE = 400;
 const INCORRECT_DATA_MESSAGE = 'Некорректные данные';
+const INCORRECT_ID_MESSAGE = 'Некорректный ID для поиска';
 
 const NOT_FOUND_STATUS_CODE = 404;
 const NOT_FOUND_USER_MESSAGE = 'Пользователь c таким ID не найден';
@@ -16,4 +17,5 @@ module.exports = {
   NOT_FOUND_STATUS_CODE,
   NOT_FOUND_USER_MESSAGE,
   NOT_FOUND_CARD_MESSAGE,
+  INCORRECT_ID_MESSAGE,
 };
