@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const mongoose = require('mongoose');
 const {
   INCORRECT_DATA_ERROR_CODE,
