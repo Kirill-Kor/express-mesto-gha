@@ -1,11 +1,14 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// eslint-disable-next-line import/no-extraneous-dependencies
+const { Joi, celebrate, errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const auth = require('./middlewares/auth');
+const { login, createUser } = require('./controllers/users');
 const { NOT_FOUND_STATUS_CODE, NOT_FOUND_PAGE } = require('./utils/errors');
 const errorHandler = require('./errors/errorHandler');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 
@@ -16,20 +19,37 @@ mongoose.set('strictQuery', false);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '63c297b30d78980df4d2faf8',
-  };
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    email: Joi
+      .string()
+      .required()
+      .email()
+      .min(2)
+      .max(30),
+    password: Joi.string().required(),
+  }),
+}), createUser);
 
-  next();
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi
+      .string()
+      .required()
+      .email()
+      .min(2)
+      .max(30),
+    password: Joi.string().required(),
+  }),
+}), login);
+
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
+app.use('*', (req, res, next) => {
+  next(new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_PAGE));
 });
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
-app.use('*', (req, res) => {
-  res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_PAGE });
-});
-
+app.use(errors());
 app.use(errorHandler);
 
 app.listen(PORT, () => {

@@ -1,6 +1,13 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/NotFoundError');
 
-const { NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE } = require('../utils/errors');
+const {
+  NOT_FOUND_STATUS_CODE,
+  NOT_FOUND_CARD_MESSAGE,
+  FORBIDDEN_ERROR_CODE,
+  FORBIDDEN_ERROR_MESSAGE,
+} = require('../utils/errors');
+const ForbiddenError = require('../errors/ForbiddenError');
 
 const getCards = async (req, res, next) => {
   try {
@@ -24,10 +31,16 @@ const createCard = async (req, res, next) => {
 };
 
 const deleteCard = async (req, res, next) => {
+  Card.findById(req.params.cardId)
+    .then((card) => {
+      if (req.user._id !== card.owner) {
+        next(new ForbiddenError(FORBIDDEN_ERROR_CODE, FORBIDDEN_ERROR_MESSAGE));
+      }
+    });
   try {
     const card = await Card.findByIdAndRemove(req.params.cardId);
     if (card === null) {
-      res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
+      throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE);
     } else res.send(card);
   } catch (error) {
     next(error);
@@ -45,7 +58,7 @@ const likeCard = async (req, res, next) => {
       },
     );
     if (card === null) {
-      res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
+      throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE);
     } else res.send(card);
   } catch (error) {
     next(error);
@@ -63,7 +76,7 @@ const dislikeCard = async (req, res, next) => {
       },
     );
     if (card === null) {
-      res.status(NOT_FOUND_STATUS_CODE).send({ message: NOT_FOUND_CARD_MESSAGE });
+      throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE);
     } else res.send(card);
   } catch (error) {
     next(error);
