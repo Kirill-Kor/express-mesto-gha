@@ -33,6 +33,9 @@ const createCard = async (req, res, next) => {
 const deleteCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.cardId);
+    if (card === null) {
+      throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE);
+    }
     // eslint-disable-next-line eqeqeq
     if (req.user._id != card.owner) {
       throw new ForbiddenError(FORBIDDEN_ERROR_CODE, FORBIDDEN_ERROR_MESSAGE);
@@ -43,9 +46,7 @@ const deleteCard = async (req, res, next) => {
 
   try {
     const card = await Card.findByIdAndRemove(req.params.cardId);
-    if (card === null) {
-      throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE);
-    } else res.send(card);
+    res.send(card);
   } catch (error) {
     next(error);
   }
