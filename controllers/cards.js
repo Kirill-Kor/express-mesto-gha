@@ -31,12 +31,16 @@ const createCard = async (req, res, next) => {
 };
 
 const deleteCard = async (req, res, next) => {
-  Card.findById(req.params.cardId)
-    .then((card) => {
-      if (req.user._id !== card.owner) {
-        next(new ForbiddenError(FORBIDDEN_ERROR_CODE, FORBIDDEN_ERROR_MESSAGE));
-      }
-    });
+  try {
+    const card = await Card.findById(req.params.cardId);
+    // eslint-disable-next-line eqeqeq
+    if (req.user._id != card.owner) {
+      throw new ForbiddenError(FORBIDDEN_ERROR_CODE, FORBIDDEN_ERROR_MESSAGE);
+    }
+  } catch (error) {
+    next(error);
+  }
+
   try {
     const card = await Card.findByIdAndRemove(req.params.cardId);
     if (card === null) {
