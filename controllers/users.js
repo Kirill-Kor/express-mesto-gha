@@ -85,7 +85,7 @@ const login = (req, res, next) => {
   User.findOne({ email }).select('+password')
     .then((user) => {
       if (user === null) {
-        throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_USER_MESSAGE);
+        throw new AuthError(AUTH_ERROR_CODE, AUTH_INCORRECT_DATA_MESSAGE);
       } else {
         bcrypt.compare(password, user.password)
           .then((matched) => {
