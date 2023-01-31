@@ -1,5 +1,5 @@
 const DEFAULT_ERROR = 500;
-const DEFAULT_ERROR_MESSAGE = 'Ошибка';
+const DEFAULT_ERROR_MESSAGE = 'На сервере произошла ошибка';
 
 const INCORRECT_DATA_ERROR_CODE = 400;
 const INCORRECT_DATA_MESSAGE = 'Некорректные данные';
