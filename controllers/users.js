@@ -4,7 +4,7 @@ const AuthError = require('../errors/AuthError');
 const NotFoundError = require('../errors/NotFoundError');
 const User = require('../models/user');
 
-const JWT_SECRET = 'super-secret-key';
+const { JWT_SECRET } = process.env;
 
 const {
   NOT_FOUND_STATUS_CODE,
@@ -100,31 +100,12 @@ const login = (req, res, next) => {
 };
 
 const patchUserInfo = async (req, res, next) => {
-  const { name, about } = req.body;
+  const { name, about, avatar } = req.body;
 
   try {
     const user = await User.findByIdAndUpdate(
       req.user._id,
-      { name, about },
-      {
-        new: true,
-        runValidators: true,
-      },
-    );
-    if (user === null) {
-      throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_USER_MESSAGE);
-    } else res.send(user);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const patchUserAvatar = async (req, res, next) => {
-  const { avatar } = req.body;
-  try {
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      { avatar },
+      { name, about, avatar },
       {
         new: true,
         runValidators: true,
@@ -144,6 +125,5 @@ module.exports = {
   getUserById,
   createUser,
   patchUserInfo,
-  patchUserAvatar,
   login,
 };

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const { Joi, celebrate, errors } = require('celebrate');
@@ -13,7 +14,7 @@ const NotFoundError = require('./errors/NotFoundError');
 const { PORT = 3000 } = process.env;
 
 const app = express();
-mongoose.connect('mongodb://localhost:27017/mestodb ');
+mongoose.connect('mongodb://localhost:27017/mestodb');
 mongoose.set('strictQuery', false);
 
 app.use(bodyParser.json());
