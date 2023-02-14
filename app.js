@@ -18,7 +18,8 @@ mongoose.connect('mongodb://localhost:27017/mestodb');
 mongoose.set('strictQuery', false);
 
 const allowedCors = [
-  'https://kirkors.mesto.nomoredomains.work/',
+  'https://kirkors.mesto.nomoredomains.work',
+  'http://kirkors.mesto.nomoredomains.work',
   'localhost:3000',
 ];
 
