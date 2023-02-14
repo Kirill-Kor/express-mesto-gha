@@ -1,21 +1,20 @@
-// const allowedCors = [
-//   'https://kirkors.mesto.nomoredomains.work',
-//   'http://kirkors.mesto.nomoredomains.work',
-//   'localhost:3000',
-// ];
+const allowedCors = [
+  'https://kirkors.mesto.nomoredomains.work',
+  'http://kirkors.mesto.nomoredomains.work',
+  'localhost:3000',
+];
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
-  // const { origin } = req.headers;
+  const { origin } = req.headers;
   const { method } = req;
   const requestHeaders = req.headers['access-control-request-headers'];
 
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-  res.header('Access-Control-Allow-Origin', 'https://kirkors.mesto.nomoredomains.work');
 
-  // if (allowedCors.includes(origin)) {
-  //   res.header('Access-Control-Allow-Origin', origin);
-  // }
+  if (allowedCors.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
 
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
