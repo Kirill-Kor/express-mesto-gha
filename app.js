@@ -24,20 +24,18 @@ const allowedCors = [
 ];
 
 app.use((req, res, next) => {
-  const { origin } = req.headers;
+  const { host } = req.headers;
   const { method } = req;
-  const requestHeaders = req.headers['access-control-request-headers'];
 
   const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
 
-  if (allowedCors.uncludes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
+  if (allowedCors.uncludes(host)) {
+    res.header('Access-Control-Allow-Origin', host);
   }
 
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
     res.header('Access-Control-Allow-Headers', requestHeaders);
-    // завершаем обработку запроса и возвращаем результат клиенту
   }
 
   next();
