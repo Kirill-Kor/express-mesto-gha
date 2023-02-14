@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
+const cors = require('./middlewares/cors');
 const { login, createUser } = require('./controllers/users');
 const { NOT_FOUND_STATUS_CODE, NOT_FOUND_PAGE } = require('./utils/errors');
 const errorHandler = require('./errors/errorHandler');
@@ -17,14 +18,10 @@ const app = express();
 mongoose.connect('mongodb://localhost:27017/mestodb');
 mongoose.set('strictQuery', false);
 
-const allowedCors = [
-  'https://kirkors.mesto.nomoredomains.work',
-  'http://kirkors.mesto.nomoredomains.work',
-  'localhost:3000',
-];
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -50,25 +47,6 @@ app.post('/signin', celebrate({
     password: Joi.string().required(),
   }),
 }), login);
-
-app.use((req, res, next) => {
-  const { origin } = req.headers;
-  const { method } = req;
-  const requestHeaders = req.headers['access-control-request-headers'];
-
-  const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
-
-  if (allowedCors.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-  }
-
-  if (method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', DEFAULT_ALLOWED_METHODS);
-    res.header('Access-Control-Allow-Headers', requestHeaders);
-  }
-
-  next();
-});
 
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
