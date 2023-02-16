@@ -1,7 +1,7 @@
 const allowedCors = [
   'https://kirkors.mesto.nomoredomains.work',
   'http://kirkors.mesto.nomoredomains.work',
-  'localhost:3000',
+  'http://localhost:3000',
 ];
 
 // eslint-disable-next-line consistent-return
