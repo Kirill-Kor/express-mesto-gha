@@ -61,7 +61,7 @@ const likeCard = async (req, res, next) => {
         new: true,
         runValidators: true,
       },
-    );
+    ).populate('owner likes');
     if (card === null) {
       throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE);
     } else res.send(card);
@@ -79,7 +79,7 @@ const dislikeCard = async (req, res, next) => {
         new: true,
         runValidators: true,
       },
-    );
+    ).populate('owner likes');
     if (card === null) {
       throw new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_CARD_MESSAGE);
     } else res.send(card);
