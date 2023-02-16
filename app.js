@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const {requestLogger, errorLogger} = require('./middlewares/logger');
 const { Joi, celebrate, errors } = require('celebrate');
 const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors);
+app.use(requestLogger);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -53,6 +55,8 @@ app.use('/cards', auth, cardsRouter);
 app.use('*', (req, res, next) => {
   next(new NotFoundError(NOT_FOUND_STATUS_CODE, NOT_FOUND_PAGE));
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 app.use(errorHandler);
