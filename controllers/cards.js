@@ -6,6 +6,8 @@ const {
   NOT_FOUND_CARD_MESSAGE,
   FORBIDDEN_ERROR_CODE,
   FORBIDDEN_ERROR_MESSAGE,
+  INCORRECT_DATA_ERROR_CODE,
+  INCORRECT_DATA_MESSAGE,
 } = require('../utils/errors');
 const ForbiddenError = require('../errors/ForbiddenError');
 
@@ -26,7 +28,9 @@ const createCard = async (req, res, next) => {
     const card = await Card.create({ name, link, owner: req.user });
     res.send(card);
   } catch (error) {
-    next(error);
+    if (error.name === 'ValidationError') {
+      next(new Error(INCORRECT_DATA_ERROR_CODE, INCORRECT_DATA_MESSAGE));
+    } else next(error);
   }
 };
 
@@ -40,13 +44,9 @@ const deleteCard = async (req, res, next) => {
     if (req.user._id != card.owner) {
       throw new ForbiddenError(FORBIDDEN_ERROR_CODE, FORBIDDEN_ERROR_MESSAGE);
     }
-  } catch (error) {
-    next(error);
-  }
 
-  try {
-    const card = await Card.findByIdAndRemove(req.params.cardId);
-    res.send(card);
+    const cardToDelete = await Card.findByIdAndRemove(req.params.cardId);
+    res.send(cardToDelete);
   } catch (error) {
     next(error);
   }

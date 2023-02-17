@@ -5,6 +5,7 @@ const {
   getMyInfo,
   getUserById,
   patchUserInfo,
+  patchUserAvatar,
 } = require('../controllers/users');
 
 router.get('/', getUsers);
@@ -20,7 +21,6 @@ router.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^(https?:\/\/)[www.]?\S+/),
   }),
 }), patchUserInfo);
 
@@ -29,6 +29,6 @@ router.patch('/me/avatar', celebrate({
     avatar: Joi.string().required().regex(/^(https?:\/\/)[www.]?\S+/),
 
   }),
-}), patchUserInfo);
+}), patchUserAvatar);
 
 module.exports = router;
